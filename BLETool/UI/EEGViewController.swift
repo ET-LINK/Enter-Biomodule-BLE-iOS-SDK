@@ -1,6 +1,6 @@
 //
 //  EEGViewController.swift
-//  FlowTimeBLE
+//  EnterBioModuleBLE
 //
 //  Created by NyanCat on 27/10/2017.
 //  Copyright © 2017 EnterTech. All rights reserved.
@@ -12,7 +12,7 @@ import RxBluetoothKit
 import RxSwift
 import SVProgressHUD
 import SwiftyTimer
-import FlowTimeBLE
+import EnterBioModuleBLE
 import AVFoundation
 
 class EEGViewController: UITableViewController {
@@ -111,6 +111,10 @@ class EEGViewController: UITableViewController {
                 }.catch { _ in
                     SVProgressHUD.showError(withStatus: "Failed to send 'stop' command!")
             }
+
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { (timer) in
+                _ = self.commandService.write(data: Data([0x08]), to: .send)
+            }
         } else {
             dataList.removeAll()
             tableView.reloadData()
@@ -127,6 +131,10 @@ class EEGViewController: UITableViewController {
                 }
                 }.catch { _ in
                     SVProgressHUD.showError(withStatus: "Failed to send 'start' command!")
+            }
+
+            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { (timer) in
+                _ = self.commandService.write(data: Data([0x07]), to: .send)
             }
         }
     }
